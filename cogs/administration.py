@@ -1,6 +1,6 @@
 from discord.ext.commands import command
-from contextlib import redirect_stdout
 from discord.ext.commands import check
+from contextlib import redirect_stdout
 import io, textwrap, traceback, os
 from discord.ext import commands
 from termcolor import cprint
@@ -18,7 +18,7 @@ class Administration(commands.Cog):
 	def __init__(self, client):
 		self.client = client
 
-	@command(hidden=True, aliases="kill")
+	@command(hidden=True, aliases=["kill"])
 	async def logout(self, ctx):
 		"""Shuts down bot"""
 		if ctx.author.id in owners:
