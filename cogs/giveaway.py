@@ -63,7 +63,7 @@ class Giveaways(commands.Cog):
 
     @bush_giveaway.command(name="create", aliases=["start"])
     async def create_giveaway(self, ctx):
-        start_embed = discord.Embed(color = disord.Colour.from_rgb(255, 150, 53))
+        start_embed = discord.Embed(color = discord.Colour.from_rgb(255, 150, 53))
         start_embed.add_field(name = "Giveaway creation process started.", value = "Answer the questions within 30 seconds or L")
         start_embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Requested by: {ctx.author.name}")
 
@@ -87,7 +87,7 @@ class Giveaways(commands.Cog):
                 asd = await self.client.wait_for('message', timeout = 30.0, check = authorAndChannelCheck)
 
             except asyncio.TimeoutError:
-                embed = discord.Embed(color = disord.Colour.from_rgb(255, 150, 53))
+                embed = discord.Embed(color = discord.Colour.from_rgb(255, 150, 53))
                 embed.add_field(name = "Timed Out", value = "<:disagree:767758599916486717> You took too long, L")
 
             else:
