@@ -4,13 +4,13 @@ from contextlib import redirect_stdout
 import io, textwrap, traceback, os
 from discord.ext import commands
 from termcolor import cprint
+from utils import vars
 import discord
 
 
 
 async def is_owner(ctx):
-	return ctx.author.id in [322862723090219008, 785526919516651561]
-
+	return ctx.author.id in vars.OWNERS
 
 class Administration(commands.Cog):
 	"""Administration Commands"""

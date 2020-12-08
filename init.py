@@ -23,7 +23,7 @@ def get_prefix(client, message):
 class BushBot(commands.Bot):
 
     async def is_owner(self, user):
-        return user.id in [322862723090219008, 785526919516651561]
+        return user.id in vars.OWNERS
 
     
     def run(self, token=None):
