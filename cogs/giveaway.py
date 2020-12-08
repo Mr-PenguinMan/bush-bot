@@ -2,31 +2,38 @@ from discord.ext.commands import has_permissions
 from discord.ext.commands import command
 from discord.ext.commands import group
 from discord.ext import commands
+import re
 import datetime
 import asyncio
 import discord
 
-
-def convert(time: str): # There is definitely a better way to do this
-    units = ["s", "m", "h", "d"]
-
-    conversions = {
-        "s": 1,
-        "m": 60,
-        "h": 3600,
-        "d": 3600*24,
-    }
-
-    if time[-1] not in units:
-        return 420
-
-    try:
-        number = int(time[:-1])
-
-    except:
-        return 69
-
-    return number * conversions[time[-1]]
+dateregex = re.compile(r"(?:(\d+)(d(?:ays?)?|h(?:ours?)?|m(?:inutes?)?|s(?:econds?)?|w(?:eeks?)?)(?: |$))", flags=re.I)
+datealiases = {
+    'weeks': ('w', 'weeks', 'week', 'wk'),
+    'days': ('d', 'days', 'day'),
+    'hours': ('h', 'hours', 'hour'),
+    'minutes': ('m', 'min', 'mins', 'minutes', 'minute'),
+    'seconds': ('s', 'seconds', 'second')
+}
+def convert(time: str):
+    times = dateregex.findall(time)
+    if len(times) < 1:
+        raise ValueError("Invalid input provided")
+    currtime = datetime.datetime.now()
+    for result in times:
+        if result[1] in datealiases["weeks"]:
+            currtime = currtime + datetime.timedelta(days=int(result[0])*7)
+        elif result[1] in datealiases["days"]:
+            currtime = currtime + datetime.timedelta(days=int(result[0]))
+        elif result[1] in datealiases["hours"]:
+            currtime = currtime + datetime.timedelta(hours=int(result[0]))
+        elif result[1] in datealiases["minutes"]:
+            currtime = currtime + datetime.timedelta(minutes=int(result[0]))
+        elif result[1] in datealiases["seconds"]:
+            currtime = currtime + datetime.timedelta(seconds=int(result[0]))
+        else:
+            raise ValueError("Somehow got a time value that wasn't the preset lengths.")
+    return currtime
 
 
 async def create_question_embeds(questions: list):
@@ -35,7 +42,7 @@ async def create_question_embeds(questions: list):
     for q in questions:
         y += 1
 
-        embed = discord.Embed(color = disord.Colour.from_rgb(255, 150, 53))
+        embed = discord.Embed(color = discord.Colour.from_rgb(255, 150, 53))
         embed.add_field(name = f"Question {y}", value = f"{q}")
 
         x.append(embed)
@@ -58,7 +65,7 @@ class Giveaways(commands.Cog):
     async def create_giveaway(self, ctx):
         start_embed = discord.Embed(color = disord.Colour.from_rgb(255, 150, 53))
         start_embed.add_field(name = "Giveaway creation process started.", value = "Answer the questions within 30 seconds or L")
-		start_embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Requested by: {ctx.author.name}")
+        start_embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Requested by: {ctx.author.name}")
 
         e = [
             "List the channel the giveaway shall commence in",
@@ -77,7 +84,7 @@ class Giveaways(commands.Cog):
             await ctx.send(embed=x)
 
             try:
-                asd = await self.client.wait_for('message', timeout = 30.0, check = check)
+                asd = await self.client.wait_for('message', timeout = 30.0, check = authorAndChannelCheck)
 
             except asyncio.TimeoutError:
                 embed = discord.Embed(color = disord.Colour.from_rgb(255, 150, 53))
@@ -88,4 +95,4 @@ class Giveaways(commands.Cog):
 
 
 def setup(client):
-	client.add_cog(Giveaways(client))
+    client.add_cog(Giveaways(client))
