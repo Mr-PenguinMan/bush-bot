@@ -1,3 +1,3 @@
-NOT_COGS = ["__pycache__", "giveaway.py"]
+NOT_COGS = ["__pycache__"]
 
 OWNERS = [322862723090219008, 785526919516651561]
