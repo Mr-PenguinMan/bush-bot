@@ -127,6 +127,7 @@ class Giveaways(commands.Cog):
         confirmation_embed = discord.Embed(title="Is this correct?")
         confirmation_embed.add_field(name="Channel", value=answers[0].mention)
         confirmation_embed.add_field(name="Length", value=answers[1]["readable"])
+        confirmation_embed.add_field(name="Ends at", value=answers[1]["endtime"].strftime(r"%A, %b %d %Y, at %I:%M%p"))
         confirmation_embed.add_field(name="Reward", value=answers[2])
         await ctx.send(embed=confirmation_embed)
 
