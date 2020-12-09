@@ -7,11 +7,11 @@ import datetime
 import asyncio
 import discord
 
-dateregex = re.compile(r"(?:(\d+)(d(?:ays?)?|h(?:ours?)?|m(?:inutes?)?|s(?:econds?)?|w(?:eeks?)?)(?: |$))", flags=re.I)
+dateregex = re.compile(r"(?:(\d+)(d(?:ays?)?|h(?:ours?|rs?)?|m(?:inutes?|ins?)?|s(?:econds?)?|w(?:eeks?|ks?)?)(?: |$))", flags=re.I)
 datealiases = {
-    'weeks': ('w', 'weeks', 'week', 'wk'),
+    'weeks': ('w', 'weeks', 'week', 'wk', 'wks'),
     'days': ('d', 'days', 'day'),
-    'hours': ('h', 'hours', 'hour'),
+    'hours': ('h', 'hours', 'hour', 'hr', 'hrs'),
     'minutes': ('m', 'min', 'mins', 'minutes', 'minute'),
     'seconds': ('s', 'seconds', 'second')
 }
