@@ -66,32 +66,30 @@ class Giveaways(commands.Cog):
         start_embed = discord.Embed(color = discord.Colour.from_rgb(255, 150, 53))
         start_embed.add_field(name = "Giveaway creation process started.", value = "Answer the questions within 30 seconds or L")
         start_embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Requested by: {ctx.author.name}")
-
-        e = [
-            "List the channel the giveaway shall commence in",
-            "List the duration of the giveaway (accepts seconds, minutes, hours, and days)",
-            "What will the reward be?"
-        ]
         
-        a = []
+        answers = []
 
         def authorAndChannelCheck(message):
             return message.channel == ctx.channel and message.author == ctx.author 
 
-        to_send = await create_question_embeds(e)
+        questions = await create_question_embeds([
+            "List the channel the giveaway shall commence in",
+            "List the duration of the giveaway (accepts seconds, minutes, hours, and days)",
+            "What will the reward be?"
+        ])
 
-        for x in to_send:
-            await ctx.send(embed=x)
+        for message in questions:
+            await ctx.send(embed=message)
 
             try:
-                asd = await self.client.wait_for('message', timeout = 30.0, check = authorAndChannelCheck)
+                response = await self.client.wait_for('message', timeout = 30.0, check = authorAndChannelCheck)
 
             except asyncio.TimeoutError:
                 embed = discord.Embed(color = discord.Colour.from_rgb(255, 150, 53))
                 embed.add_field(name = "Timed Out", value = "<:disagree:767758599916486717> You took too long, L")
 
             else:
-                a.append(asd) 
+                answers.append(response) 
 
 
 def setup(client):
