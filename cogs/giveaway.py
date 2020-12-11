@@ -79,7 +79,7 @@ class Giveaways(commands.Cog):
 
     @group(name="giveaway", aliases=["ga", "raffle"], invoke_without_command = True, ignore_extra = False)
     async def bush_giveaway(self, ctx):
-        await ctx.send("Giveaway command activated")
+        await ctx.send("Giveaway command activated. Use 'm!giveaway create' or 'm!ga create' to create a giveaway.")
 
 
     @bush_giveaway.command(name="create", aliases=["start"])
@@ -123,13 +123,24 @@ class Giveaways(commands.Cog):
                 elif message == "What will the reward be?":
                     parsed_response = response.content
                 answers.append(parsed_response)
+
+        ends_at = answers[1]["endtime"].strftime(r"%A, %b %d %Y, at %I:%M%p")
                 
-        confirmation_embed = discord.Embed(title="Is this correct?")
+        confirmation_embed = discord.Embed(title="Is this correct?", color=discord.Colour.from_rgb(255, 150, 53))
         confirmation_embed.add_field(name="Channel", value=answers[0].mention)
         confirmation_embed.add_field(name="Length", value=answers[1]["readable"])
-        confirmation_embed.add_field(name="Ends at", value=answers[1]["endtime"].strftime(r"%A, %b %d %Y, at %I:%M%p"))
+        confirmation_embed.add_field(name="Ends at", value=ends_at)
         confirmation_embed.add_field(name="Reward", value=answers[2])
         await ctx.send(embed=confirmation_embed)
+
+        target_channel = discord.utils.get(ctx.guild.text_channels, answers[0].name)
+        giveaway_embed = discord.Embed(title= f"Giveaway",color = discord.Colour.from_rgb(255, 150, 53))
+        giveaway_embed.add_field(name = "Hosted By", value = f"{ctx.author.mention}")
+        giveaway_embed.add_field(name = "Reward", value = f"{reward}")
+        giveaway_embed.set_footer(icon_url = ctx.guild.icon_url, text = f"Ends at {ends_at}")
+
+        sent = await target_channel.send(embed=giveaway_embed)
+        sent.add_reaction("🎉") # TODO: Set up listener to watch for reactions and filter out ones that do not qualify.
 
 
 def setup(client):
