@@ -17,3 +17,8 @@ Bot made to force ironmoon to stop inviting garbage
 - Jishaku
 
 All of these modules can be installed via `pip`
+
+## Todo
+
+- [Set up listener to watch for reactions and filter out ones that do not qualify.](cogs/giveaway.py)
+- Add requirements field in giveaway command.
