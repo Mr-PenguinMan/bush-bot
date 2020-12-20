@@ -35,7 +35,7 @@ class BushBot(commands.Bot):
         else:
             super().run(token)
 
-intents = discord.Intents.default()
+intents = discord.Intents(messages=True, guilds=True, members=True, reactions=True, typing=False, presences=False, bans=True, dm_messages=False)
 
 client = BushBot(command_prefix=get_prefix, case_insensitive=True, intents=intents, allowed_mentions=discord.AllowedMentions(everyone=False, roles=False))
 

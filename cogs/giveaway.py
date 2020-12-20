@@ -1,11 +1,13 @@
+from discord.ext.commands.cog import listener
 from discord.ext.commands import has_permissions
 from discord.ext.commands import command
 from discord.ext.commands import group
 from discord.ext import commands
-import re
+
 import datetime
 import asyncio
 import discord
+import re
 
 def td_format(td_object):
     seconds = int(td_object.total_seconds())
@@ -75,6 +77,8 @@ class Giveaways(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.active_giveaways = []
+        self.active_giveaway_message = None
 
 
     @group(name="giveaway", aliases=["ga", "raffle"], invoke_without_command = True, ignore_extra = False)
@@ -82,8 +86,8 @@ class Giveaways(commands.Cog):
         await ctx.send("Giveaway command activated. Use 'm!giveaway create' or 'm!ga create' to create a giveaway.")
 
 
-    @bush_giveaway.command(name="create", aliases=["start"])
-    async def create_giveaway(self, ctx):
+    @bush_giveaway.command(name="create --role ", aliases=["start -r ", "start --role ", "create -r "])
+    async def create_giveaway_with_role_req(self, ctx, role: discord.Role):
         start_embed = discord.Embed(color = discord.Colour.from_rgb(255, 150, 53))
         start_embed.add_field(name = "Giveaway creation process started.", value = "Answer the questions within 30 seconds or L")
         start_embed.set_footer(icon_url=ctx.author.avatar_url, text=f"Requested by: {ctx.author.name}")
@@ -125,6 +129,7 @@ class Giveaways(commands.Cog):
                 answers.append(parsed_response)
 
         ends_at = answers[1]["endtime"].strftime(r"%A, %b %d %Y, at %I:%M%p")
+        self.active_giveaways.append(answers[1]["endtime"])
                 
         confirmation_embed = discord.Embed(title="Is this correct?", color=discord.Colour.from_rgb(255, 150, 53))
         confirmation_embed.add_field(name="Channel", value=answers[0].mention)
@@ -141,6 +146,23 @@ class Giveaways(commands.Cog):
 
         sent = await target_channel.send(embed=giveaway_embed)
         sent.add_reaction("🎉") # TODO: Set up listener to watch for reactions and filter out ones that do not qualify.
+
+        giveaway_cfg = {
+            "required_role": role,
+            "message": sent
+        }
+
+        self.active_giveaway_message = giveaway_cfg 
+
+
+
+    @listener
+    async def on_raw_reaction_add(payload):
+        if payload.message.id == self.active_giveaway_message.id and payload.emoji = "🎉": # TODO: Convert `self.active_giveaway_message` to a list when I'm feeling less lazy 
+            if self.active_giveaway_message["required_role"] in payload.member.roles:
+                pass
+            else:
+                
 
 
 def setup(client):
