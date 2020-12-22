@@ -130,4 +130,5 @@ dmypy.json
 
 auth.json
 prefixes.json
-
+.idea
+.vscode

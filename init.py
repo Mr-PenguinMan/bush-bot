@@ -1,5 +1,6 @@
 from discord.ext import commands
 from termcolor import cprint
+from core import BushBot
 from utils import vars
 
 import discord
@@ -8,8 +9,6 @@ import time
 import json
 import os
 
-cprint("Initializing bot...", "green", attrs=["bold"])
-bg1 = time.perf_counter_ns()
 
 def get_prefix(client, message):
     with open('prefixes.json', 'r') as f:
@@ -20,20 +19,8 @@ def get_prefix(client, message):
     return [prefix, "bush "]
 
 
-class BushBot(commands.Bot):
-
-    async def is_owner(self, user):
-        return user.id in vars.OWNERS
-
-    
-    def run(self, token=None):
-        if token is None:
-            with open("auth.json") as w:
-                token = json.load(w)["TOKEN"]
-            self.run(token)
-
-        else:
-            super().run(token)
+cprint("Initializing bot...", "green", attrs=["bold"])
+bg1 = time.perf_counter_ns()
 
 intents = discord.Intents(messages=True, guilds=True, members=True, reactions=True, typing=False, presences=False, bans=True, dm_messages=False)
 
