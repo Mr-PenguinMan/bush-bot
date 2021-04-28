@@ -22,6 +22,7 @@
 - Termcolor
 - Discord
 - Jishaku
+- A brain
 
 All of these modules can be installed via `pip`
 
